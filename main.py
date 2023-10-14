@@ -1,15 +1,18 @@
 import xbmcgui
 import git
 import xbmc
+import os
 
 # Funktion zum Klonen eines Git-Repositorys
 def clone_git_repository(url):
     try:
-        # Extrahiere den Repository-Namen aus der URL
-        repository_name = url.split('/')[-1].replace('.git', '')  # GitHub-URL endet normalerweise mit .git
+        # Extrahiere den Namen des Git-Repositorys aus der URL
+        repo_name = url.split("/")[-1].split(".git")[0]
 
-        # Hier wird das Zielverzeichnis auf ~/.kodi/addons/ mit dem Repository-Namen gesetzt
-        target_directory = xbmc.translatePath('special://home/addons/') + repository_name
+        # Hier wird das Zielverzeichnis auf ~/.kodi/addons/ gesetzt
+        target_directory = os.path.join(xbmc.translatePath('special://home/addons/'), repo_name)
+
+        # Klonen Sie das Git-Repository in das benannte Verzeichnis
         git.Repo.clone_from(url, target_directory)
         xbmcgui.Dialog().notification('Erfolg', 'Repository wurde geklont.', xbmcgui.NOTIFICATION_INFO, 5000)
     except Exception as e:
